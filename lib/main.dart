@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -66,22 +69,51 @@ class _addproductState extends State<addproduct> {
         child: Column(
           children: [
             InkWell(
-              onTap: () {
-                showDialog(
-                    builder: (context) {
-                      return Dialog(
-                        child: Column(children: [
-                          ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.camera),
-                              label: Text("camera"))
-                        ]),
-                      );
-                    },
-                    context: context);
-              },
-              child: Container(),
-            ),
+                onTap: () {
+                  showDialog(
+                      builder: (context) {
+                        return Dialog(
+                          child: Column(
+                            children: [
+                              ElevatedButton.icon(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    final XFile? photo = await _picker
+                                        .pickImage(source: ImageSource.camera);
+                                    setState(() {
+                                      img = photo!.path;
+                                    });
+                                  },
+                                  icon: Icon(Icons.camera),
+                                  label: Text("camera")),
+                              ElevatedButton.icon(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    final XFile? image = await _picker
+                                        .pickImage(source: ImageSource.gallery);
+                                    setState(() {
+                                      img = image!.path;
+                                    });
+                                  },
+                                  icon: Icon(Icons.photo),
+                                  label: Text("Gallery")),
+                            ],
+                          ),
+                        );
+                      },
+                      context: context);
+                },
+                child: img != ""
+                    ? Container(
+                        child: CircleAvatar(
+                          radius: 90,
+                          backgroundImage: FileImage(File(img)),
+                        ),
+                      )
+                    : Container(
+                        child: CircleAvatar(
+                        radius: 90,
+                      ))),
             Container(
               margin: EdgeInsets.fromLTRB(20, 50, 20, 30),
               child: Center(
@@ -110,6 +142,8 @@ class _addproductState extends State<addproduct> {
 
   TextEditingController name = TextEditingController();
   TextEditingController price = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  String img = "";
 }
 
 class viewproduct extends StatefulWidget {
