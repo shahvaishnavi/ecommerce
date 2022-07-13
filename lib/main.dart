@@ -112,6 +112,7 @@ class _addproductState extends State<addproduct> {
                       )
                     : Container(
                         child: CircleAvatar(
+                        backgroundImage: AssetImage("img/dp1.webp"),
                         radius: 90,
                       ))),
             Container(
